@@ -1,12 +1,14 @@
 package Catalyst::Plugin::Session::Store::PSGI;
 {
-  $Catalyst::Plugin::Session::Store::PSGI::VERSION = '0.0.1';
+  $Catalyst::Plugin::Session::Store::PSGI::VERSION = '0.0.2';
 }
 {
   $Catalyst::Plugin::Session::Store::PSGI::DIST = 'Catalyst-Plugin-Session-PSGI';
 }
 use strict;
 use warnings;
+
+use Catalyst::Plugin::Session::PSGI;
 
 
 use base qw/Catalyst::Plugin::Session::Store/;
@@ -18,7 +20,7 @@ sub get_session_data {
     my ($c, $id) = @_;
 
     # grab the PSGI environment
-    my $psgi_env = $c->request->{_psgi_env};
+    my $psgi_env = Catalyst::Plugin::Session::PSGI::_psgi_env($c);
     return
         unless defined $psgi_env;
 
@@ -38,7 +40,7 @@ sub store_session_data {
     my ($c, $id, $data) = @_;
 
     # grab the PSGI environment
-    my $psgi_env = $c->request->{_psgi_env};
+    my $psgi_env = Catalyst::Plugin::Session::PSGI::_psgi_env($c);
     return
         unless defined $psgi_env;
 
@@ -68,7 +70,6 @@ sub _psgi_section {
 1;
 # ABSTRACT: Session plugin for access to PSGI/Plack session
 
-
 =pod
 
 =head1 NAME
@@ -77,7 +78,7 @@ Catalyst::Plugin::Session::Store::PSGI - Session plugin for access to PSGI/Plack
 
 =head1 VERSION
 
-version 0.0.1
+version 0.0.2
 
 =head1 SYNOPSIS
 
@@ -124,7 +125,6 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
 
 __END__
 # vim: ts=8 sts=4 et sw=4 sr sta

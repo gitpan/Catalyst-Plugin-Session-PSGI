@@ -4,7 +4,7 @@ Catalyst::Plugin::Session::PSGI - minimal configuration access to PSGI/Plack ses
 
 # VERSION
 
-version 0.0.1
+version 0.0.2
 
 # SYNOPSIS
 
@@ -16,6 +16,10 @@ PSGI session as follows:
         Session::State::PSGI
         Session::Store::PSGI
     /;
+
+## \_psgi\_env
+
+Fetches the psgi env globally from the request env
 
 # EXPERIMENTAL
 
@@ -40,49 +44,49 @@ glaring areas of concern:
 
 - session expiry
 
-I currently believe that it should be the responsibility of the [Plack](http://search.cpan.org/perldoc?Plack)
-middleware to expire and clear session data. As far as possible this
-functionality is unimplemented and unsupported in this distribution.
+    I currently believe that it should be the responsibility of the [Plack](http://search.cpan.org/perldoc?Plack)
+    middleware to expire and clear session data. As far as possible this
+    functionality is unimplemented and unsupported in this distribution.
 
 - session expiry value initialisation
 
-There was a problem with the session expiry value being unset in the Catalyst
-related code. This led to sessions always being deleted/expired and never
-working properly.
+    There was a problem with the session expiry value being unset in the Catalyst
+    related code. This led to sessions always being deleted/expired and never
+    working properly.
 
-There are a couple of dubious areas to resolve this.
+    There are a couple of dubious areas to resolve this.
 
-    sub get_session_data {
-        # ...
+        sub get_session_data {
+            # ...
 
-        # TODO: work out correct place to initialise this
-        $psgi_env->{'psgix.session.expires'}
-            ||= $c->get_session_expires;
+            # TODO: work out correct place to initialise this
+            $psgi_env->{'psgix.session.expires'}
+                ||= $c->get_session_expires;
 
-        # ...
-    }
+            # ...
+        }
 
-is almost certainly the wrong time and place to be initialising this value, but
-it works and I'm open to clue-sticks and patches.
+    is almost certainly the wrong time and place to be initialising this value, but
+    it works and I'm open to clue-sticks and patches.
 
-    sub get_session_expires {
-        my $c = shift;
-        my $expires = $c->_session_plugin_config->{expires} || 0;
-        return time() + $expires;
-    }
+        sub get_session_expires {
+            my $c = shift;
+            my $expires = $c->_session_plugin_config->{expires} || 0;
+            return time() + $expires;
+        }
 
-worries me because I cahve no idea where the value for
-`$c-`_session_plugin_config->{expires}> is being initialised. I'm concerned
-that this may become `0` when you least expect it and start expiring all
-sessions.
+    worries me because I have no idea where the value for
+    `$c->_session_plugin_config->{expires}` is being initialised. I'm concerned
+    that this may become `0` when you least expect it and start expiring all
+    sessions.
 
 - (lack of) test coverage
 
-Other than basic sanity tests provided by [Dist::Zilla](http://search.cpan.org/perldoc?Dist::Zilla) this distribution __has no tests__!
+    Other than basic sanity tests provided by [Dist::Zilla](http://search.cpan.org/perldoc?Dist::Zilla) this distribution __has no tests__!
 
-I haven't found the time to mock up a plack-catalyst test suite to ensure the
-session is doing the right thing. Once again I'm open to clue-sticks and
-patches.
+    I haven't found the time to mock up a plack-catalyst test suite to ensure the
+    session is doing the right thing. Once again I'm open to clue-sticks and
+    patches.
 
 # SEE ALSO
 

@@ -1,12 +1,20 @@
 package Catalyst::Plugin::Session::PSGI;
 {
-  $Catalyst::Plugin::Session::PSGI::VERSION = '0.0.1';
+  $Catalyst::Plugin::Session::PSGI::VERSION = '0.0.2';
 }
 {
   $Catalyst::Plugin::Session::PSGI::DIST = 'Catalyst-Plugin-Session-PSGI';
 }
 use strict;
 use warnings;
+
+
+sub _psgi_env {
+    my ( $c ) = @_;
+
+    return $c->request->can('env') ? $c->request->env : $c->request->{_psgi_env};
+}
+
 
 
 
@@ -16,7 +24,6 @@ use warnings;
 1;
 # ABSTRACT: minimal configuration access to PSGI/Plack session (EXPERIMENTAL)
 
-
 =pod
 
 =head1 NAME
@@ -25,7 +32,7 @@ Catalyst::Plugin::Session::PSGI - minimal configuration access to PSGI/Plack ses
 
 =head1 VERSION
 
-version 0.0.1
+version 0.0.2
 
 =head1 SYNOPSIS
 
@@ -37,6 +44,10 @@ PSGI session as follows:
         Session::State::PSGI
         Session::Store::PSGI
     /;
+
+=head2 _psgi_env
+
+Fetches the psgi env globally from the request env
 
 =head1 EXPERIMENTAL
 
@@ -94,8 +105,8 @@ it works and I'm open to clue-sticks and patches.
         return time() + $expires;
     }
 
-worries me because I cahve no idea where the value for
-C<$c->_session_plugin_config->{expires}> is being initialised. I'm concerned
+worries me because I have no idea where the value for
+C<< $c->_session_plugin_config->{expires} >> is being initialised. I'm concerned
 that this may become C<0> when you least expect it and start expiring all
 sessions.
 
@@ -129,7 +140,6 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
 
 __END__
 # vim: ts=8 sts=4 et sw=4 sr sta

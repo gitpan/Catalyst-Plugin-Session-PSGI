@@ -1,6 +1,6 @@
 package Catalyst::Plugin::Session::State::PSGI;
 {
-  $Catalyst::Plugin::Session::State::PSGI::VERSION = '0.0.1';
+  $Catalyst::Plugin::Session::State::PSGI::VERSION = '0.0.2';
 }
 {
   $Catalyst::Plugin::Session::State::PSGI::DIST = 'Catalyst-Plugin-Session-PSGI';
@@ -8,8 +8,11 @@ package Catalyst::Plugin::Session::State::PSGI;
 use strict;
 use warnings;
 
+use Catalyst::Plugin::Session::PSGI;
+
 
 use base qw/Catalyst::Plugin::Session::State/;
+
 
 
 
@@ -23,7 +26,7 @@ sub prepare_action {
 
 sub get_session_id {
     my $c = shift;
-    my $psgi_env = $c->request->{_psgi_env};
+    my $psgi_env = Catalyst::Plugin::Session::PSGI::_psgi_env($c);
 
     return
         unless defined $psgi_env;
@@ -46,8 +49,8 @@ sub set_session_expires { } # unsupported
 
 sub delete_session_id   { } # unsupported
 
-
 __END__
+
 =pod
 
 =head1 NAME
@@ -56,7 +59,7 @@ Catalyst::Plugin::Session::State::PSGI
 
 =head1 VERSION
 
-version 0.0.1
+version 0.0.2
 
 =head1 SYNOPSIS
 
@@ -130,4 +133,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

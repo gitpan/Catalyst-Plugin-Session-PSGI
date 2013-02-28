@@ -25,7 +25,7 @@ my %WriteMakefileArgs = (
     "Catalyst::Plugin::Session::State" => 0,
     "Catalyst::Plugin::Session::Store" => 0
   },
-  "VERSION" => "0.0.1",
+  "VERSION" => "0.0.2",
   "test" => {
     "TESTS" => "t/*.t"
   }
